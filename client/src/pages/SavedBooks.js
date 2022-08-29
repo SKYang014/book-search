@@ -3,7 +3,6 @@ import { Jumbotron, Container, CardColumns, Card, Button } from 'react-bootstrap
 import { useQuery, useMutation } from '@apollo/client';
 import { QUERY_GET_ME } from '../utils/queries';
 import { REMOVE_BOOK } from '../utils/mutations';
-
 //import { getMe, deleteBook } from '../utils/API';
 import Auth from '../utils/auth';
 import { removeBookId } from '../utils/localStorage';
@@ -12,9 +11,24 @@ const SavedBooks = () => {
   //const [userData, setUserData] = useState({});
   const [removeBook] = useMutation(REMOVE_BOOK)
   const { loading, data } = useQuery(QUERY_GET_ME);
-  const userData = data?.me || [];
+  const userData = data?.me || {};
+  console.log(userData.username)
+
+
+  // if data isn't here yet, say so
+  if (loading) {
+    return <h2>LOADING...</h2>;
+  }
+
+  if (!userData?.username) {
+    return (
+      <h4>
+        You need to be logged in to see this page. Use the navigation links above to sign up or log in!
+      </h4>
+    );
+  }
   // use this to determine if `useEffect()` hook needs to run again
-  const userDataLength = Object.keys(userData).length;
+  // const userDataLength = Object.keys(userData).length;
 
   // useEffect(() => {
   //   const getUserData = async () => {
@@ -25,13 +39,13 @@ const SavedBooks = () => {
   //         return false;
   //       }
 
-  //       const response = await user(token, user);
+  //       const response = await getMe(token);
 
   //       if (!response.ok) {
   //         throw new Error('something went wrong!');
   //       }
 
-  //       //   const user = await response.json();
+  //       const user = await response.json();
   //       setUserData(user);
   //     } catch (err) {
   //       console.error(err);
@@ -52,11 +66,11 @@ const SavedBooks = () => {
     //const choosenBook = userData.find((book) => book.bookId === bookId)
 
     try {
-      const response = await removeBook(bookId, token);
+      const removeAction = await removeBook({ variables: { bookId: bookId } });
 
-      if (!response.ok) {
-        throw new Error('something went wrong!');
-      }
+      // if (!response.ok) {
+      //   throw new Error('something went wrong!');
+      // }
 
       // const updatedUser = await response.json();
       // setUserData(updatedUser);
@@ -67,10 +81,6 @@ const SavedBooks = () => {
     }
   };
 
-  // if data isn't here yet, say so
-  if (!userDataLength) {
-    return <h2>LOADING...</h2>;
-  }
 
   return (
     <>

@@ -14,7 +14,7 @@ const resolvers = {
             if (context.user) {
                 const userData = await User.findOne({ _id: context.user._id })
                     .select('-__v -password');
-                return { userData };
+                return userData;
             }
         },
     },
@@ -46,11 +46,11 @@ const resolvers = {
             if (context.user) {
                 const user = await User.findOneAndUpdate(
                     { id: context.user.id },
-                    { $addToSet: { savedBooks: { ...args, } } },
+                    { $addToSet: { savedBooks: { ...args } } },
                     { new: true, validators: true }
                 )
-                const token = signToken(user);
-                return { token, user };
+                //const token = signToken(user);
+                return user;
             }
             throw new AuthenticationError('You need to be logged in!');
         },
@@ -62,7 +62,7 @@ const resolvers = {
                     { new: true, validators: true }
                 )
                 const token = signToken(user);
-                return { token, user };
+                return user;
             }
             throw new AuthenticationError('You need to be logged in!');
         }
