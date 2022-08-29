@@ -30,7 +30,12 @@ mutation saveBook($authors: [String!]!, $description: String!, $bookId: String!,
     user {
       username
       savedBooks {
+        authors
+        bookId
+        image
+        link
         title
+        description
       }
         
       
@@ -43,10 +48,15 @@ mutation removeBook( $bookId: String!)
 {
   removeBook(bookId: $bookId){
     user{
-      username
-      savedBooks {
-        title
-      }
+        username
+        savedBooks{
+            authors
+            bookId
+            image
+            link
+            title
+            description
+        }
     }
   }
 }`

@@ -104,7 +104,7 @@ const SearchBooks = () => {
         throw new Error('something went wrong!');
       }
       setSavedBookIds([...savedBookIds, choosenBook.bookId])
-      savedBookIds(savedBookIds)
+
     }
     catch (e) {
       console.error(e);
